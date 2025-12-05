@@ -1,0 +1,71 @@
+═══════════════════════════════════════════════════════
+   DATALONIA - QUICK START
+═══════════════════════════════════════════════════════
+
+📌 SETUP (samo prvi put):
+
+1. Backend:
+   pip install -r requirements.txt
+   cp .env.example .env
+   mv entities/meda_entity.py entities/meda.py  (ako postoji)
+
+2. Frontend:
+   cd frontend
+   npm install
+   cd ..
+
+─────────────────────────────────────────────────────
+
+🚀 POKRETANJE (svaki put):
+
+Terminal 1 - Backend:
+   python -m uvicorn core.datalonia_main:app --port 8000 --reload
+
+Terminal 2 - Frontend:
+   cd frontend
+   npm run dev
+
+Otvori: http://127.0.0.1:5173
+
+─────────────────────────────────────────────────────
+
+✅ PROVERA:
+
+Backend:  http://127.0.0.1:8000
+Frontend: http://127.0.0.1:5173
+
+Ako ne radi - pročitaj RUN.md
+
+─────────────────────────────────────────────────────
+
+💡 BRZI TESTOVI:
+
+Testiranje backenда (u drugom terminalu):
+   curl http://localhost:8000/
+   curl http://localhost:8000/world/status
+
+Mock режim (bez API keya):
+   - Ne stavljaj ANTHROPIC_API_KEY u .env
+   - Meda će koristiti mock odgovore
+
+Claude API режim:
+   - Dodaj u .env: ANTHROPIC_API_KEY=sk-ant-api03-...
+   - Restartuj backend
+
+─────────────────────────────────────────────────────
+
+🐛 ČESTI PROBLEMI:
+
+1. "Port 8000 already in use"
+   → Zatvori drugi Python ili koristi --port 8001
+
+2. "npm: command not found"
+   → Instaliraj Node.js sa https://nodejs.org/
+
+3. "Module 'entities.meda' not found"
+   → Preimenuj meda_entity.py u meda.py
+
+4. Frontend ne vidi backend
+   → Proveri da backend radi: curl http://localhost:8000
+
+═══════════════════════════════════════════════════════
