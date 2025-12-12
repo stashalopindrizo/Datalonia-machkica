@@ -7,24 +7,22 @@ type Props = {
 };
 
 export default function MessageList({ messages, endRef }: Props) {
-  
-return (
-  <div className="messages">
-    {messages.map((msg, index) => (
-      <div
-        key={index}
-        className={`msg ${msg.role === "user" ? "user" : "ai"}`}
-      >
-        <div className="bubble">
-          {msg.content}
-          <small className="time">
-            {new Date(msg.timestamp).toLocaleTimeString()}
-          </small>
+  return (
+    <div className="messages">
+      {messages.map((msg, index) => (
+        <div
+          key={index}
+          className={`msg ${msg.role === "user" ? "user" : "ai"}`}
+        >
+          <div>
+            {msg.content}
+            <small className="time">
+              {new Date(msg.timestamp).toLocaleTimeString()}
+            </small>
+          </div>
         </div>
-      </div>
-    ))}
-    <div ref={endRef} />
-  </div>
-);
+      ))}
+      <div ref={endRef} />
+    </div>
+  );
 }
-
