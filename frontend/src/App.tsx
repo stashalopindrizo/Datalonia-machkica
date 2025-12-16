@@ -12,8 +12,41 @@ export default function App() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [status, setStatus] = useState<"connected" | "offline">("offline");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [status, setStatus] = useState<"connected" | "offline">("offline"); 
+  const [brainOpen, setBrainOpen] = useState(false); 
+  const toggleBrain = () => setBrainOpen((v) => !v);
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null); 
+  const messagesContainerRef = useRef<HTMLDivElement>(null); 
+
+  const [autoScroll, setAutoScroll]= useState(true); 
+
+  useEffect(() => {
+  const el = messagesContainerRef.current;
+  if (!el) return;
+
+  const onScroll = () => {
+    const distanceFromBottom =
+      el.scrollHeight - el.scrollTop - el.clientHeight;
+
+    setAutoScroll(distanceFromBottom < 40);
+  };
+
+  el.addEventListener("scroll", onScroll);
+  onScroll(); // inicijalno stanje
+
+  return () => el.removeEventListener("scroll", onScroll);
+}, []); 
+   useEffect(() => {
+  if (!brainOpen) return;
+
+  const onKeyDown = (e: KeyboardEvent) => {
+    if (e.key === "Escape") setBrainOpen(false);
+  };
+
+  window.addEventListener("keydown", onKeyDown);
+  return () => window.removeEventListener("keydown", onKeyDown);
+}, [brainOpen]);
 
   // --- helpers
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -28,7 +61,10 @@ export default function App() {
   }, []);
 
   // 3) auto scroll
-  useEffect(() => { scrollToBottom(); }, [messages]);
+  useEffect(() => {
+  if (!autoScroll) return;
+  scrollToBottom();
+}, [messages, autoScroll]);
 
   // --- slanje poruke
   const sendMessage = async () => {
@@ -72,7 +108,7 @@ export default function App() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
       sendMessage();
@@ -112,21 +148,31 @@ return (
       gap: "8px",
     }}
   >
-    <MessageList messages={messages} endRef={messagesEndRef} />
+    <MessageList messages={messages} 
+    endRef={messagesEndRef} 
+    containerRef={messagesContainerRef} />
 
     <InputBar
       input={input}
       loading={loading}
       onChange={setInput}
       onSend={sendMessage}
-      onKeyPress={handleKeyPress}
+      onKeyPress={handleKeyPress} 
+      onToggleBrain={toggleBrain}  
     />
   </div>
 
   {/* DOLE: BRAIN PANEL */}
-  <div>
-    <BrainPanel />
+  {brainOpen && (
+  <div className="brainOverlay" onClick={() => setBrainOpen(false)}>
+    <div
+      className="brainDrawer"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <BrainPanel />
+    </div>
   </div>
+)}
 </div> 
   </div>
 </div> 

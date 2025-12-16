@@ -3,12 +3,13 @@ import type { Message } from "../../types";
 
 type Props = {
   messages: Message[];
-  endRef: React.RefObject<HTMLDivElement>;
+  endRef: React.RefObject<HTMLDivElement>; 
+  containerRef: React.RefObject<HTMLDivElement>;
 };
 
-export default function MessageList({ messages, endRef }: Props) {
+export default function MessageList({ messages, endRef, containerRef }: Props) {
   return (
-    <div className="messages">
+    <div className="messages" ref={containerRef}>
       {messages.map((msg, index) => (
         <div
           key={index}

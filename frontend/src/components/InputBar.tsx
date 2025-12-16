@@ -7,6 +7,7 @@ type Props = {
   onChange: (value: string) => void;
   onSend: () => void;
   onKeyPress: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  onToggleBrain: () => void;
 };
 
 export default function InputBar({
@@ -14,7 +15,8 @@ export default function InputBar({
   loading,
   onChange,
   onSend,
-  onKeyPress,
+  onKeyPress, 
+  onToggleBrain,
 }: Props) {
  return (
   <div className="inputRow">
@@ -24,15 +26,33 @@ export default function InputBar({
       onChange={(e) => onChange(e.target.value)}
       onKeyDown={onKeyPress}
       disabled={loading}
-    />
+    />  
+    
+  {/* BRAIN dugme */}
+  <button
+    type="button"
+    className="brainBtn" 
+    onClick={() => {
+     console.log("BRAIN CLICK");
+     onToggleBrain?.();
+    }}
+    title="Brain"
+    disabled={loading}
+  >
+    🧠
+  </button> 
+
     <button
-      onClick={onSend}
-      className="p-2 bg-blue-700 rounded-md hover:bg-blue-600"
-      disabled={loading}
-    >
-      <Send className="w-5 h-5" />
-    </button>
-  </div>
+  type="button"
+  onClick={onSend}
+    className="p-2 bg-blue-700 rounded-md hover:opacity-90"
+    disabled={loading}
+    title="Send"
+  >
+    <Send className="w-5 h-5" />
+  </button>
+</div> 
+
 );
 }
 
